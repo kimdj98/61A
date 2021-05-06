@@ -21,7 +21,19 @@ def roll_dice(num_rolls, dice=six_sided):
     assert type(num_rolls) == int, 'num_rolls must be an integer.'
     assert num_rolls > 0, 'Must roll at least once.'
     # BEGIN PROBLEM 1
-    "*** YOUR CODE HERE ***"
+    i = 0
+    sum = 0
+    flag = False
+    while i < num_rolls:
+        temp = dice()
+        sum = sum + temp
+        if temp == 1:
+            flag = True
+        i += 1
+    if flag == True:
+        return 1
+    else:
+        return sum
     # END PROBLEM 1
 
 
@@ -31,7 +43,18 @@ def piggy_points(score):
     score:  The opponent's current score.
     """
     # BEGIN PROBLEM 2
-    "*** YOUR CODE HERE ***"
+    def square(x):
+        return x*x
+    
+    num = square(score)
+    min = num%10
+
+    while num >= 1:
+        if min > num%10:
+            min = num%10
+        num = num//10
+    
+    return min+3
     # END PROBLEM 2
 
 
@@ -51,7 +74,10 @@ def take_turn(num_rolls, opponent_score, dice=six_sided, goal=GOAL_SCORE):
     assert num_rolls <= 10, 'Cannot roll more than 10 dice.'
     assert opponent_score < goal, 'The game should be over.'
     # BEGIN PROBLEM 3
-    "*** YOUR CODE HERE ***"
+    if num_rolls == 0:
+        return piggy_points(opponent_score)
+    else:
+        return roll_dice(num_rolls, dice)
     # END PROBLEM 3
 
 
@@ -73,7 +99,31 @@ def more_boar(player_score, opponent_score):
     False
     """
     # BEGIN PROBLEM 4
-    "*** YOUR CODE HERE ***"
+    def leftmost(num):
+        if num < 10 :
+            return 0
+        else:
+            temp = 0
+            while num > 0:
+                temp = num % 10
+                num = num // 10
+            
+            return temp
+
+    def secondmost(num):
+        if num < 10 :
+            return num
+        else :
+            temp = 0
+            while num>=10:
+                temp = num % 10
+                num = num // 10
+            return temp
+
+    if leftmost(player_score)<leftmost(opponent_score) and secondmost(player_score)<secondmost(opponent_score):
+        return True
+    else:
+        return False
     # END PROBLEM 4
 
 
@@ -112,7 +162,18 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
     """
     who = 0  # Who is about to take a turn, 0 (first) or 1 (second)
     # BEGIN PROBLEM 5
-    "*** YOUR CODE HERE ***"
+    while score0 < goal and score1 < goal:
+        if who == 0:
+            take_turn(strategy0, opponent_score, dice, goal)
+            while more_boar(player_score, opponent_score):
+                take_turn(strategy0, opponent_score, dice, goal)
+            
+        if who == 1:
+            take_turn(strategy1, opponent_score, dice, goal)
+            while more_boar(player_score, opponent_score):
+                take_turn(strategy1, opponent_score, dice, goal)
+                
+        who = next_player(who)
     # END PROBLEM 5
     # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
     # BEGIN PROBLEM 6

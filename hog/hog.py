@@ -164,15 +164,15 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
     # BEGIN PROBLEM 5
     while score0 < goal and score1 < goal:
         if who == 0:
-            take_turn(strategy0, opponent_score, dice, goal)
-            while more_boar(player_score, opponent_score):
-                take_turn(strategy0, opponent_score, dice, goal)
+            score0 += take_turn(strategy0(score0, score1), score1, dice, goal)
+            while more_boar(score0, score1) and score0 < goal and score1< goal:
+                score0 += take_turn(strategy0(score0, score1), score1, dice, goal)
             
         if who == 1:
-            take_turn(strategy1, opponent_score, dice, goal)
-            while more_boar(player_score, opponent_score):
-                take_turn(strategy1, opponent_score, dice, goal)
-                
+            score1 += take_turn(strategy1(score1, score0), score0, dice, goal)
+            while more_boar(score1, score0) and score0 < goal and score1< goal:
+                score1 += take_turn(strategy1(score1, score0), score0, dice, goal)
+
         who = next_player(who)
     # END PROBLEM 5
     # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
